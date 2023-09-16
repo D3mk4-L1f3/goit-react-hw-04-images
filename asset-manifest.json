@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/https://github.com/D3mk4-L1f3/goit-react-hw-04-images.git/static/css/main.b01c30aa.css",
-    "main.js": "/https://github.com/D3mk4-L1f3/goit-react-hw-04-images.git/static/js/main.ec482c8a.js",
-    "index.html": "/https://github.com/D3mk4-L1f3/goit-react-hw-04-images.git/index.html",
-    "main.b01c30aa.css.map": "/https://github.com/D3mk4-L1f3/goit-react-hw-04-images.git/static/css/main.b01c30aa.css.map",
-    "main.ec482c8a.js.map": "/https://github.com/D3mk4-L1f3/goit-react-hw-04-images.git/static/js/main.ec482c8a.js.map"
+    "main.css": "/goit-react-hw-04-images.git/static/css/main.b01c30aa.css",
+    "main.js": "/goit-react-hw-04-images.git/static/js/main.b180b0ad.js",
+    "index.html": "/goit-react-hw-04-images.git/index.html",
+    "main.b01c30aa.css.map": "/goit-react-hw-04-images.git/static/css/main.b01c30aa.css.map",
+    "main.b180b0ad.js.map": "/goit-react-hw-04-images.git/static/js/main.b180b0ad.js.map"
   },
   "entrypoints": [
     "static/css/main.b01c30aa.css",
-    "static/js/main.ec482c8a.js"
+    "static/js/main.b180b0ad.js"
   ]
 }

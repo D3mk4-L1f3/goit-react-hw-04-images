@@ -1,61 +1,61 @@
 import styled from '@emotion/styled';
 
-export const SearchbarConatiner = styled.header({
-  top: 0,
-  left: 0,
-  position: 'sticky',
-  zIndex: 1100,
+export const SearcherWrapper = styled.header({
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: '64px',
-  paddingRight: '24px',
-  paddingLeft: '24px',
-  paddingTop: '12px',
-  paddingBottom: '12px',
-  color: '#fff',
-  backgroundColor: '#3f51b5',
+  width: '100%',
+  height: '80px',
+  padding: '10px 0',
+  marginBottom: '20px',
+  backgroundColor: 'rgba(8, 70, 218, 0.6)',
+  position: 'relative',
 });
 
 export const SearchForm = styled.form`
   display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  max-height: 60px;
-  background-color: #fff;
-  border-radius: 3px;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
+  justify-content: center;
+  max-width: 350px;
+  background-color: beige;
+  opacity: 0.4;
+  position: fixed;
+  top: 5;
+  z-index: 1;
+  border-radius: 10px;
   overflow: hidden;
-
   &:hover {
     opacity: 1;
     cursor: pointer;
-    transform: scale(1.03);
-    box-shadow: 1px 6px 8px 2px rgba(173, 173, 173, 0.8);
-    -webkit-box-shadow: 1px 6px 8px 2px rgba(173, 173, 173, 0.8);
-    -moz-box-shadow: 1px 6px 8px 2px rgba(173, 173, 173, 0.8);
+    transform: scale(1.05);
   }
 `;
 
+export const SearchFormInput = styled.input`
+  font-size: 28px;
+  text-align: center;
+  width: 100%;
+  background-color: beige;
+  border: none;
+  &:focus {
+  outline: transparent;
+  border: none;
+  }
+  &::placeholder {
+    font-size: 20px;
+  }
+`;
 
 export const SearchFormButton = styled.button`
-  display: inline-block;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.6;
+  padding: 15px;
   cursor: pointer;
-  outline: none;
+  border: none;
+  background-color: beige;
 
   &:hover {
-    opacity: 1;
-    cursor: pointer;
-      transform: scale(1.03);
-    box-shadow: 1px 6px 8px 2px rgba(173, 173, 173, 0.8);
-    -webkit-box-shadow: 1px 6px 8px 2px rgba(173, 173, 173, 0.8);
-    -moz-box-shadow: 1px 6px 8px 2px rgba(173, 173, 173, 0.8);
+    opacity: 1;}
+  &:focus {
+    outline: transparent;
   }
 `;
 
@@ -71,14 +71,3 @@ export const SearchFormButtonLabel = styled.span`
   border: 0;
 `;
 
-export const SearchFormInput = styled.input`
-  display: inline-block;
-  width: 100%;
-  height: 45px;
-  font: inherit;
-  font-size: 20px;
-  border: none;
-  outline: none;
-  padding-left: 4px;
-  padding-right: 4px;
-`;

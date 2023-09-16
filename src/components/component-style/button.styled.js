@@ -3,10 +3,9 @@ import styled from '@emotion/styled';
 export const LoadMoreButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 16px;
-  border-radius: 2px;
-  background-color: #3f51b5;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: rgba(8, 70, 218, 0.6);
   color: #fff;
   border: 0;
   text-decoration: none;

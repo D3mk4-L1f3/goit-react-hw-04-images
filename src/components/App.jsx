@@ -1,4 +1,5 @@
-import { Component } from 'react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,35 +10,48 @@ import { Button } from './button/Button';
 import { getPhoto } from '../api/PixabayApi';
 import { MainApp } from './component-style/app.styled';
 
-export class App extends Component {
-  state = {
-    photosArr: [],
-    page: 1,
-    searchQuery: '',
-    status: 'idle',
-    showLoadMoreBtn: true,
+export const App = () => {
+  const [photosArr, setPhotosArr] = useState([]);
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [showLoadMoreBtn, setShowLoadMoreBtn] = useState(true);
+  const [orientation, setOrientation] = useState('horizontal');
+
+  const updateOrientation = () => {
+    window.innerWidth <= 555
+      ? setOrientation('vertical')
+      : setOrientation('horizontal');
   };
 
-  async componentDidUpdate(_, prevState) {
-    const currentQuery = prevState.searchQuery;
-    const nextQuery = this.state.searchQuery;
-    const currentPage = prevState.page;
-    const nextPage = this.state.page;
+  useEffect(() => {
+    updateOrientation();
+    window.addEventListener('resize', updateOrientation);
+    return () => {
+      window.removeEventListener('resize', updateOrientation);
+      setPhotosArr([]);
+    };
+  }, [orientation]);
 
-    if (currentQuery !== nextQuery || currentPage !== nextPage) {
+  useEffect(() => {
+    const fetchData = async () => {
+      if (searchQuery.trim() === '') {
+        return;
+      }
+
       try {
-        this.setState({ status: 'pending', showLoadMoreBtn: true });
-        const getPhotoResponse = await getPhoto(nextQuery, nextPage);
+        setStatus('pending');
+        const getPhotoResponse = await getPhoto(searchQuery, page, orientation);
         const nextPagePhotosArr = getPhotoResponse.hits;
 
         if (nextPagePhotosArr.length === 0) {
           toast.error('No results found!');
-          this.setState({ status: 'error' });
+          setStatus('error');
           return;
         }
 
         const loadMoreBtnStatus =
-          this.state.page < Math.ceil(getPhotoResponse.totalHits / 12);
+          page < Math.ceil(getPhotoResponse.totalHits / 12);
 
         if (!loadMoreBtnStatus) {
           toast.info(
@@ -45,69 +59,48 @@ export class App extends Component {
           );
         }
 
-        this.setState(prevState => {
-          return {
-            photosArr: [...prevState.photosArr, ...nextPagePhotosArr],
-            status: 'resolved',
-            showLoadMoreBtn: loadMoreBtnStatus,
-          };
-        });
+        setPhotosArr(prevPhotosArr => [...prevPhotosArr, ...nextPagePhotosArr]);
+        setStatus('resolved');
+        setShowLoadMoreBtn(loadMoreBtnStatus);
       } catch (error) {
-        if (error.response.status === 400) {
-          this.setState({ status: 'idle' });
+        if (error.response && error.response.status === 400) {
+          setStatus('idle');
           toast.info(
             `We're sorry, but you've reached the end of search results`
           );
         }
       }
-    }
+    };
 
-    if (
-      prevState.photosArr.length > 0 &&
-      prevState.searchQuery === this.state.searchQuery
-    ) {
-      window.scrollBy({
-        top: 200 * 2,
-        behavior: 'smooth',
-      });
+    if (searchQuery.trim() !== '' || page !== 1) {
+      fetchData();
     }
-  }
+  }, [searchQuery, page, orientation]);
 
-  handleSubmit = async searchQuery => {
+  const handleSubmit = searchQuery => {
     if (searchQuery.trim() === '') {
       return;
     }
-    this.setState({ searchQuery, status: 'pending', photosArr: [], page: 1 });
+    setSearchQuery(searchQuery);
+    setStatus('pending');
+    setPhotosArr([]);
+    setPage(1);
+    setShowLoadMoreBtn(true);
   };
 
-  onLoandMore = step => {
-    this.setState(prevState => {
-      return {
-        page: prevState.page + step,
-      };
-    });
+  const onLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
 
-  getModalData = url => {
-    console.log(url);
-    if (url) {
-      this.setState({ largeImageURL: url });
-    }
-  };
-
-  render() {
-    const { photosArr, status, showLoadMoreBtn } = this.state;
-
-    return (
-      <MainApp>
-        <Searchbar onSubmit={this.handleSubmit} />
-        <ImageGallery photosArr={photosArr} />
-        {status === 'pending' && <Loader />}
-        {status === 'resolved' && showLoadMoreBtn && (
-          <Button onClick={this.onLoandMore} />
-        )}
-        <ToastContainer autoClose={3000} />
-      </MainApp>
-    );
-  }
-}
+  return (
+    <MainApp>
+      <Searchbar onSubmit={handleSubmit} />
+      <ImageGallery photosArr={photosArr} />
+      {status === 'pending' && <Loader />}
+      {status === 'resolved' && showLoadMoreBtn && (
+        <Button onClick={onLoadMore} />
+      )}
+      <ToastContainer autoClose={3000} />
+    </MainApp>
+  );
+};

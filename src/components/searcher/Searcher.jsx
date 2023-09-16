@@ -1,74 +1,64 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import { TfiSearch } from 'react-icons/tfi';
 import PropTypes from 'prop-types';
-
 import {
-  SearchbarConatiner,
+  SearcherWrapper,
   SearchForm,
   SearchFormButton,
   SearchFormButtonLabel,
   SearchFormInput,
 } from '../component-style/searcher.styled';
 
-export class Searchbar extends Component {
-  state = {
-    searchQuery: '',
-    isSubmitButtonDisabled: true,
-  };
+export const Searchbar = ({ onSubmit }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
+  const [lastSearchedQuery, setLastSearchedQuery] = useState('');
 
-  heandleSubmit = e => {
-    e.preventDefault();
-
-    const { searchQuery } = this.state;
-    this.props.onSubmit(searchQuery);
-  };
-
-  heandleSearchInputChange = e => {
+  const handleInputChange = e => {
     const { value } = e.target;
-
-    this.setState({
-      searchQuery: value,
-      isSubmitButtonDisabled: false,
-    });
-
-    if (value.trim() === '') {
-      this.setState({
-        isSubmitButtonDisabled: true,
-      });
-    }
+    setSearchQuery(value);
+    setIsSubmitButtonDisabled(
+      value.trim() === '' || value === lastSearchedQuery
+    );
   };
 
-  render() {
-    const { searchQuery, isSubmitButtonDisabled } = this.state;
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if (searchQuery.trim() === '' || searchQuery === lastSearchedQuery) {
+      return;
+    }
+    await onSubmit(searchQuery);
+    setLastSearchedQuery(searchQuery);
+  };
 
-    return (
-      <SearchbarConatiner>
-        <SearchForm onSubmit={this.heandleSubmit}>
-          <SearchFormButton
-            type="submit"
-            disabled={isSubmitButtonDisabled}
-            className="button"
-            aria-label="search button"
-          >
-            <TfiSearch style={{ color: 'black', width: '20', height: '20' }} />
-            <SearchFormButtonLabel></SearchFormButtonLabel>
-          </SearchFormButton>
+  return (
+    <SearcherWrapper>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchFormButton
+          type="submit"
+          disabled={isSubmitButtonDisabled}
+          className="button"
+          aria-label="search button"
+          style={{ color: isSubmitButtonDisabled ? 'red' : 'green' }}
+        >
+          <TfiSearch style={{ width: '25', height: '25' }} />
+          <SearchFormButtonLabel></SearchFormButtonLabel>
+        </SearchFormButton>
 
-          <SearchFormInput
-            name="searcher"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="...try to search here)"
-            area-label="searcher input"
-            value={searchQuery}
-            onChange={this.heandleSearchInputChange}
-          />
-        </SearchForm>
-      </SearchbarConatiner>
-    );
-  }
-}
+        <SearchFormInput
+          name="searcher"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="...try to search here)"
+          area-label="searcher input"
+          value={searchQuery}
+          onChange={handleInputChange}
+        />
+      </SearchForm>
+    </SearcherWrapper>
+  );
+};
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,

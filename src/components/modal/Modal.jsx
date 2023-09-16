@@ -2,17 +2,11 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import ReactModal from 'react-modal';
 import { customStyles } from '../component-style/modal.styled';
-
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 ReactModal.setAppElement('#root');
 
-export default function Modal({
-  isModalOpen,
-  onCloseModal,
-  largeImageURL,
-  tags,
-}) {
+export const Modal = ({ isModalOpen, onCloseModal, largeImageURL, tags }) => {
   useEffect(() => {
     isModalOpen ? disableBodyScroll(document.body) : clearAllBodyScrollLocks();
   }, [isModalOpen]);
@@ -24,11 +18,11 @@ export default function Modal({
         isOpen={isModalOpen}
         onRequestClose={onCloseModal}
       >
-        <img src={largeImageURL} alt={tags} width="800px" />
+        <img src={largeImageURL} alt={tags} width="900" />
       </ReactModal>
     </>
   );
-}
+};
 
 Modal.propTypes = {
   largeImageURL: PropTypes.string.isRequired,
